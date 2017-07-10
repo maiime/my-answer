@@ -1,0 +1,29 @@
+{
+  "name": "my-answer",
+  "version": "1.0.0",
+  "description": "A minimal Electron application",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron .",
+    "packager": "electron-packager ./ my-answer --win --x86 ./OutApp --version 1.6.2 --icon=./src/img/my.ico"
+  },
+  "repository": "https://github.com/electron/electron-quick-start",
+  "keywords": [
+    "Electron",
+    "quick",
+    "start",
+    "tutorial",
+    "demo"
+  ],
+  "author": "GitHub",
+  "license": "CC0-1.0",
+  "devDependencies": {
+    "electron": "~1.6.2",
+    "electron-packager": "8.7.0"
+  },
+  "dependencies": {
+    "chokidar": "1.7.0",
+    "crypto": "0.0.3",
+    "request": "2.81.0"
+  }
+}

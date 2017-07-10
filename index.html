@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <title>梦幻答题器</title>
+    <link rel="stylesheet" href="src/css/reset.css">
+    <link rel="stylesheet" href="src/css/iconfont.css">
+    <link rel="stylesheet" href="src/css/main.css">
+    <script src="jquery.1.8.3.min.js"></script>
+  </head>
+  <body>
+    <div class="title"  style="-webkit-app-region: drag;-webkit-user-select: none">
+      <em class="logo pl"></em>
+      <h1 class="pl">maii出品</h1>
+      <em class="main_close pr iconfont icon-x"></em>
+      <em class="main_setting pr iconfont icon-icon02"></em>
+    </div>
+    <div class="main_body">
+      <div class="answer">请截图</div>
+    </div>
+    <div class="setting">
+      <div class="box">
+        <span class="iconfont icon-x set_close"></span>
+        <button class="btn">设置图片文件夹路径</button>
+      </div>
+    </div>
+  </body>
+
+  <script>
+    $(function(){
+      var set_box = $('.setting');
+      $(".set_close").click(()=>{
+        set_box.hide();
+      })
+      $(".main_setting").click(()=>{
+        if(set_box.is(":hidden")){
+          set_box.show();
+        }else{
+          set_box.hide();
+        }
+      })
+    })
+    require('./renderer.js')
+  </script>
+</html>
