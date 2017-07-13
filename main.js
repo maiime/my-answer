@@ -11,9 +11,8 @@ const ipcMain = electron.ipcMain
 const path = require('path')
 const url = require('url')
 
-var chokidar = require('chokidar')
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
+var chokidar = require('chokidar');       //文件夹监听
+
 let mainWindow,childWindow
 var img_file_path,watcher
 function createWindow () {
