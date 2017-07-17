@@ -312,55 +312,86 @@ class Answer{
         })   
     }
     
+    // /**
+    //  * 将有效区域分成若干小块，
+    //  * 拼装成问题文本信息
+    //  */
+    // circle_img_data(){
+    //     var _this = this;
+    //     _this.zi = [];
+    //     function * for_column(){
+    //         for(let i = _this.top;i<_this.bottom;i+=_this.line_height){
+    //             var x = 0;
+    //             while(x<=_this.width-13){
+    //                 yield _this.cube_to_data(x,i).then(res=>{
+    //                     return _this.find_word(res);
+    //                     }).then(res=>{
+    //                         _this.zi.push(res.content);
+    //                         if(res.type == 1){
+    //                             x+=7;
+    //                         }else{
+    //                             x+=14;
+    //                         }
+    //                     })
+    //             }
+    //         }
+    //     }
+    //     var g = for_column();
+    //     run2();
+    //     function run2(){
+    //         var res = g.next();
+    //         if(!res.done){
+    //            res.value.then(res=>{
+    //                run2();
+    //            })
+    //         }else{
+    //             // _this.callback(_this.zi.join(''));
+    //             var reg = /你的答案不正确，答题时间额外增加了\d+秒，请答另一题:|附加考题，当前第\d+题，还可以答\d+题。|御前科举大赛第\d+关:这一关考的是\S+。题目:|（可登录aq.gm.163.com寻找正确答案）|礼部考题，已答\d+题，答对\d+题。/;
+    //             var str = _this.zi.join('').replace(reg,'');
+    //             _this.get_answer_from_server(str).then(res=>{
+    //                 _this.callback(res);
+    //             })
+    //         }
+    //     }
+
+    // }
     /**
-     * 将有效区域分成若干小块，
-     * 拼装成问题文本信息
+     * 根据字模逐个生成问题文本信息并回答问题
      */
-    circle_img_data(){
+    async create_and_answer_question() { 
         var _this = this;
         _this.zi = [];
-        function * for_column(){
-            for(let i = _this.top;i<_this.bottom;i+=_this.line_height){
-                var x = 0;
-                while(x<=_this.width-13){
-                    yield _this.cube_to_data(x,i).then(res=>{
-                        return _this.find_word(res);
-                        }).then(res=>{
-                            _this.zi.push(res.content);
-                            if(res.type == 1){
-                                x+=7;
-                            }else{
-                                x+=14;
-                            }
-                        })
-                }
+        var reg = /你的答案不正确，答题时间额外增加了\d+秒，请答另一题:|附加考题，当前第\d+题，还可以答\d+题。|御前科举大赛第\d+关:这一关考的是\S+。题目:|（可登录aq.gm.163.com寻找正确答案）|礼部考题，已答\d+题，答对\d+题。/;
+        for(let i = _this.top;i<_this.bottom;i+=_this.line_height){
+            var x = 0;
+            while(x<=_this.width-13){
+                await _this.cube_to_data(x,i).then(res=>{
+                    return _this.find_word(res);
+                    }).then(res=>{
+                        _this.zi.push(res.content);
+                        if(res.type == 1){
+                            x+=7;
+                        }else{
+                            x+=14;
+                        }
+                    })
             }
         }
-        var g = for_column();
-        run2();
-        function run2(){
-            var res = g.next();
-            if(!res.done){
-               res.value.then(res=>{
-                   run2();
-               })
-            }else{
-                // _this.callback(_this.zi.join(''));
-                var reg = /你的答案不正确，答题时间额外增加了\d+秒，请答另一题:|附加考题，当前第\d+题，还可以答\d+题。|御前科举大赛第\d+关:这一关考的是\S+。题目:|（可登录aq.gm.163.com寻找正确答案）|礼部考题，已答\d+题，答对\d+题。/;
-                var str = _this.zi.join('').replace(reg,'');
-                _this.get_answer_from_server(str).then(res=>{
-                    _this.callback(res);
-                })
-            }
-        }
-
+        var str = _this.zi.join('').replace(reg,'');
+        var reg2 = /[^\u4e00-\u9fa5\d]/g;
+        var str2 = str.replace(reg2,'');
+        _this.get_answer_from_server(str2).then(res=>{
+            _this.callback(res);
+        })
     }
+
+
 
     /**
      * 答题器主要功能 回答问题
      * @param {*String} path    图片路径 
      */
-    answer(path){
+    run(path){
         var _this = this;
         this.load_img(path).then(res=>{
             return _this.draw_img(res);
@@ -378,7 +409,8 @@ class Answer{
         }).then(res=>{
             return _this.get_img_top_and_bottom();
         }).then(res=>{
-            _this.circle_img_data();
+            // _this.circle_img_data();
+            _this.create_and_answer_question();
         }).catch(err=>{
             console.warn(err);
         })

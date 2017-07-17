@@ -73,7 +73,7 @@ var answer = new Answer({width:640,height:500,line_height:17},(res)=>{
  */
 ipcRenderer.on('got_latest_img',(e,path)=>{
     setTimeout(()=>{
-        answer.answer(path);
+        answer.run(path);
     },500);
     
 })
